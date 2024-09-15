@@ -36,10 +36,22 @@
 
     <form id="ideaForm">
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-            <input type="text" id="ideaInput" name="idea" placeholder="Enter your idea" required>
-            <input type="email" id="emailInput" name="email" placeholder="Enter your email" required>
+            <label for="productName">How will you call your product/service?</label>
+            <input type="text" id="productName" name="productName" required style="width: 400px;">
+            
+            <label for="idealCustomer">Who's your ideal customer?</label>
+            <input type="text" id="idealCustomer" name="idealCustomer" required style="width: 400px;">
+            
+            <label for="jobToBeDone">What is their job to be done?</label>
+            <input type="text" id="jobToBeDone" name="jobToBeDone" required style="width: 400px;">
+            
+            <label for="howYouHelp">How do you help?</label>
+            <input type="text" id="howYouHelp" name="howYouHelp" required style="width: 400px;">
+            
+            <label for="emailInput">Enter your email</label>
+            <input type="email" id="emailInput" name="email" required style="width: 400px;">
             <button type="submit" id="submitButton">Submit</button>
-            <div id="responseMessage" style="display: none; color: green; margin-top: 10px;">Got your idea, thanks! Please check your email inbox.</div>
+            <div id="responseMessage" style="display: none; color: green; margin-top: 10px;">Got your answers, thanks! Please check your email inbox.</div>
         </div>
     </form>
 
@@ -76,18 +88,24 @@
         // Start the progress
         updateProgress();
 
-        const idea = document.getElementById('ideaInput').value;
+        const productName = document.getElementById('productName').value;
+        const idealCustomer = document.getElementById('idealCustomer').value;
+        const jobToBeDone = document.getElementById('jobToBeDone').value;
+        const howYouHelp = document.getElementById('howYouHelp').value;
         const email = document.getElementById('emailInput').value;
         const response = await fetch('/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ idea, email }),
+            body: JSON.stringify({ productName, idealCustomer, jobToBeDone, howYouHelp, email }),
         });
         if (response.ok) {
             document.getElementById('responseMessage').style.display = 'block';
-            document.getElementById('ideaInput').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('idealCustomer').value = '';
+            document.getElementById('jobToBeDone').value = '';
+            document.getElementById('howYouHelp').value = '';
             document.getElementById('emailInput').value = '';
         }
         submitButton.disabled = false;

@@ -16,7 +16,10 @@ load_dotenv()
 app = FastAPI()
 
 class InputData(BaseModel):
-    idea: str
+    productName: str
+    idealCustomer: str
+    jobToBeDone: str
+    howYouHelp: str
     email: EmailStr
 
 @app.get("/", response_class=HTMLResponse)
@@ -27,11 +30,11 @@ async def read_index():
 
 @app.post("/submit")
 async def submit_idea(data: InputData):
-    # Send test email
-    send_email(data.email, data.idea)
-    return {"message": "Idea submitted and test email sent successfully"}
+    # Send email
+    send_email(data.email, data.productName, data.idealCustomer, data.jobToBeDone, data.howYouHelp)
+    return {"message": "Answers submitted and email sent successfully"}
 
-def send_email(to_email: str, idea: str):
+def send_email(to_email: str, product_name: str, ideal_customer: str, job_to_be_done: str, how_you_help: str):
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
     sender_email = os.getenv("SENDER_EMAIL")
@@ -40,12 +43,17 @@ def send_email(to_email: str, idea: str):
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = to_email
-    message["Subject"] = "Test Email - Your Idea Submission"
+    message["Subject"] = f"Landing Page Design Spec for {product_name}"
 
     prompt = (
-        'You are startup founder who want to hire a designer to build you a landing page. '
-        'Write a detailed spec for the designer based on the following business idea. '
-        f'IDEA: {idea}'
+        'You are startup founder who wants to hire a designer to build you a landing page. '
+        'Write a detailed spec for the designer based on the following information:\n\n'
+        f'Product/Service Name: {product_name}\n'
+        f'Ideal Customer: {ideal_customer}\n'
+        f'Job to be Done: {job_to_be_done}\n'
+        f'How You Help: {how_you_help}\n\n'
+        'Please provide a comprehensive design specification for the landing page, '
+        'including suggested layout, key elements, color scheme, and any other relevant details.'
     )
     response = gemini(prompt)
 
