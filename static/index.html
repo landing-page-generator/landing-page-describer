@@ -6,7 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page Describer</title>
     <style>
-        .footer {
+        #progress-container {
+            width: 100%;
+            background-color: #ddd;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 20px;
+            background-color: #4caf50;
+            transition: width 0.1s;
+        }
+
+         .footer {
             position: fixed;
             right: 10px;
             bottom: 10px;
@@ -15,6 +28,9 @@
     </style>
 </head>
 <body align="center" style="margin: 0">
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
 
     <h1>Describe Your Landing Page</h1>
 
@@ -23,7 +39,7 @@
             <input type="text" id="ideaInput" name="idea" placeholder="Enter your idea" required>
             <input type="email" id="emailInput" name="email" placeholder="Enter your email" required>
             <button type="submit" id="submitButton">Submit</button>
-            <div id="responseMessage" style="display: none; color: green; margin-top: 10px;">Got it, thanks!</div>
+            <div id="responseMessage" style="display: none; color: green; margin-top: 10px;">Got your idea, thanks! Please check your email inbox.</div>
         </div>
     </form>
 
@@ -36,6 +52,30 @@
         e.preventDefault();
         const submitButton = document.getElementById('submitButton');
         submitButton.disabled = true;
+
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        let progress_stop = false;
+
+        function updateProgress() {
+            progress += (95 - progress) / 100;
+            if (progress > 100) progress = 100;
+
+            if (progress_stop) {
+                progress = 100;
+            }
+            progressBar.style.width = progress + '%';
+            if (progress_stop) {
+                return;
+            }
+            if (progress < 100) {
+                setTimeout(updateProgress, 100);
+            }
+        }
+
+        // Start the progress
+        updateProgress();
+
         const idea = document.getElementById('ideaInput').value;
         const email = document.getElementById('emailInput').value;
         const response = await fetch('/submit', {
@@ -51,6 +91,7 @@
             document.getElementById('emailInput').value = '';
         }
         submitButton.disabled = false;
+        progress_stop = true;
     });
     </script>
 </body>
