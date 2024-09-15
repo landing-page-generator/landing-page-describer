@@ -8,6 +8,8 @@ from email.mime.multipart import MIMEMultipart
 import os
 from dotenv import load_dotenv
 
+from gemini import gemini
+
 load_dotenv()
 
 app = FastAPI()
@@ -41,7 +43,14 @@ def send_email(to_email: str, idea: str):
     message["To"] = to_email
     message["Subject"] = "Test Email - Your Idea Submission"
 
-    body = f"Thank you for submitting your idea: {idea}"
+    prompt = (
+        'You are startup founder who want to hire a designer to build you a landing page. '
+        'Write a detailed spec for the designer based on the following business idea. '
+        f'IDEA: {idea}'
+    )
+    response = gemini(prompt)
+
+    body = response
     message.attach(MIMEText(body, "plain"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
