@@ -22,7 +22,7 @@
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
             <input type="text" id="ideaInput" name="idea" placeholder="Enter your idea" required>
             <input type="email" id="emailInput" name="email" placeholder="Enter your email" required>
-            <button type="submit">Submit</button>
+            <button type="submit" id="submitButton">Submit</button>
             <div id="responseMessage" style="display: none; color: green; margin-top: 10px;">Got it, thanks!</div>
         </div>
     </form>
@@ -34,6 +34,8 @@
     <script>
     document.getElementById('ideaForm').addEventListener('submit', async (e) => {
         e.preventDefault();
+        const submitButton = document.getElementById('submitButton');
+        submitButton.disabled = true;
         const idea = document.getElementById('ideaInput').value;
         const email = document.getElementById('emailInput').value;
         const response = await fetch('/submit', {
@@ -48,6 +50,7 @@
             document.getElementById('ideaInput').value = '';
             document.getElementById('emailInput').value = '';
         }
+        submitButton.disabled = false;
     });
     </script>
 </body>
