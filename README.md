@@ -31,4 +31,4 @@ uvicorn main:app --reload
 
 # Production deployment  
 
-Auto deployed to Vercel https://???.vercel.app at each commit to `main` branch.
+Auto deployed to Vercel https://landing-page-describer.vercel.app at each commit to `main` branch.
