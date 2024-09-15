@@ -1,3 +1,4 @@
+import markdown
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
@@ -35,8 +36,6 @@ def send_email(to_email: str, idea: str):
     smtp_port = 587
     sender_email = os.getenv("SENDER_EMAIL")
     sender_password = os.getenv("SENDER_PASSWORD")
-    print(sender_email)
-    print(sender_password)
 
     message = MIMEMultipart()
     message["From"] = sender_email
@@ -50,8 +49,9 @@ def send_email(to_email: str, idea: str):
     )
     response = gemini(prompt)
 
-    body = response
-    message.attach(MIMEText(body, "plain"))
+    # Convert Markdown to HTML
+    body = markdown.markdown(response)
+    message.attach(MIMEText(body, "html"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         server.ehlo()
